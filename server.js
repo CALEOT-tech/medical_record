@@ -10,7 +10,8 @@ const app = express();
 //const port = 4665;
 const PORT = process.env.PORT || 4665;
 
-// Database configuration
+
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
