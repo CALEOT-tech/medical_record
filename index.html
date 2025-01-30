@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>School Medical Registration</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the School Medical Registration System</h1>
+        <p>Register now to access medical services and stay healthy.</p>
+        <button id="registerButton" >Register Now</button>
+   
+
+    <div id="registrationForm" style="display: none;"> 
+        <h2>Registration Form</h2>
+        <form id="registrationFormInner" action="http://localhost:4665/register" method="POST"> 
+            <div class="form-group">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" required>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" required>
+            </div>
+            <div class="form-group">
+                <label for="matricNo">Matriculation Number:</label>
+                <input type="text" id="matricNo" name="matricNo" required>
+            </div>
+            <div class="form-group">
+                <label for="department">Department:</label>
+                <input type="text" id="department" name="department" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="medicalQuestions">Medical Questions:</label>
+                <textarea id="medicalQuestions" name="medicalQuestions" rows="4" required></textarea> 
+            </div>
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 School Medical Registration</p>
+        <p><a href="admin.html">Admin</a></p>
+    </footer>
+</div>
+<script src="public/script.js" ></script>
+
+</body>
+</html>
+
