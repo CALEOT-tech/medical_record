@@ -173,28 +173,7 @@ const initializeDatabase = async () => {
 
 initializeDatabase();
 
-// Register route
-app.post('/register', async (req, res) => {
-  try {
-    const { firstName, lastName, matricNo, department, email, medicalQuestions } = req.body;
-    console.log('Received registration data:', req.body); // Log the received data
 
-    const result = await pool.query(
-      'INSERT INTO students (first_name, last_name, matric_no, department, email, medical_questions) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [firstName, lastName, matricNo, department, email, medicalQuestions]
-    );
-
-    res.status(200).json({ message: 'Registration successful!', student: result.rows[0] }); 
-  } catch (error) {
-    console.error('Error registering student:', error);
-
-    if (error.code === '23505') { // Handle unique constraint violation (e.g., duplicate matricNo or email)
-      return res.status(400).json({ error: 'Matriculation number or email already exists.' });
-    } else {
-     return res.status(500).json({ error: 'Registration failed. Please try again later.' });
-    }
-  }
-});
 
 // Register endpoint
 app.post('/register', async (req, res) => {
