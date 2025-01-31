@@ -18,6 +18,8 @@ const pool = new Pool({
     rejectUnauthorized: false
   }
 });
+// Use CORS middleware
+app.use(cors()); // Enable CORS for all requests
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
