@@ -196,6 +196,26 @@ app.post('/register', async (req, res) => {
   }
 });
 
+// Register endpoint
+app.post('/register', async (req, res) => {
+  const { firstName, lastName, matricNo, department, email, medicalQuestions } = req.body;
+
+  if (!firstName || !lastName || !matricNo || !department || !email || !medicalQuestions) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  try {
+    const result = await pool.query(
+      'INSERT INTO students (first_name, last_name, matric_no, department, email, medical_questions) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [firstName, lastName, matricNo, department, email, medicalQuestions]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error('Error registering student:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Get all students route
 app.get('/students', async (req, res) => {
   try {
