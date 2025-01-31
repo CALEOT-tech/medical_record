@@ -1,49 +1,52 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Show registration form and hide register button
+document.addEventListener('DOMContentLoaded', () => {
     const registerButton = document.getElementById('registerButton');
     if (registerButton) {
-        registerButton.addEventListener('click', function() {
-            const registrationForm = document.getElementById('registrationForm');
-            registrationForm.style.display = 'block';
-            registerButton.style.display = 'none';
-        });
-        }
-    });
-
-    const registerButtonadmin = document.getElementById('registerButtonadmin');
-    if (registerButtonadmin) {
-        registerButtonadmin.addEventListener('click', function() {
-            window.location.href = 'register_student.html';
-        });
+      registerButton.addEventListener('click', () => {
+        const registrationForm = document.getElementById('registrationForm');
+        registrationForm.style.display = 'block';
+        registerButton.style.display = 'none';
+      });
     }
-
-    document.getElementById('loginForm').addEventListener('submit', async (event) => {
+  
+    const registerButtonAdmin = document.getElementById('registerButtonadmin');
+    if (registerButtonAdmin) {
+      registerButtonAdmin.addEventListener('click', () => {
+        window.location.href = 'register_student.html';
+      });
+    }
+  
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+      loginForm.addEventListener('submit', async (event) => {
         event.preventDefault();
-      
+  
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
-      
+  
         try {
-          const response = await fetch('/admin/login', {
+          const response = await fetch('http://localhost:4665/admin/login', { // Update URL
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
           });
-      
-          if (response.ok) {
-            window.location.href = '/admin_dashboard.html';
-          } else {
-            const result = await response.json();
-            alert(`Login failed: ${result.error}`);
-          }
+  
+          if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.error || 'Login failed');
+            }
+          
+  
+          const result = await response.json();
+          window.location.href = 'http://localhost:4665/admin_dashboard.html';
         } catch (error) {
           console.error('Error during login:', error);
-          alert('Login failed. Please try again later.');
+          alert(error.message);
         }
       });
-        
+    }
+
     // Handle viewing all students
     const viewAllStudentsButton = document.getElementById('viewAllStudentsButton');
     const viewAllStudentsModal = document.getElementById('viewAllStudentsModal');
@@ -51,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (viewAllStudentsButton) {
         viewAllStudentsButton.addEventListener('click', async () => {
             try {
-                const response = await fetch('/students');
+                const response = await fetch('http://localhost:4665/students');
                 if (!response.ok) {
                     throw new Error('Error fetching students');
                 }
@@ -63,7 +66,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     const editCell = row.insertCell(0);
                     const editButton = document.createElement('button');
                     editButton.textContent = 'Edit';
-                    editButton.className = 'edit-button';
                     editButton.addEventListener('click', () => {
                         document.getElementById('editMatricNo').value = student.matric_no;
                         document.getElementById('editFirstName').value = student.first_name;
@@ -88,169 +90,173 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-       // Close the view all students modal
-       if (closeViewAllStudents) {
-        closeViewAllStudents.addEventListener('click', () => {
-            viewAllStudentsModal.style.display = 'none';
-        });
-    }
-
-    // Handle deleting a student
+     // Close the view all students modal
+     if (closeViewAllStudents) {
+      closeViewAllStudents.addEventListener('click', () => {
+          viewAllStudentsModal.style.display = 'none';
+      });
+  }
+  
+  
+  //Handle deleting a student
     const deleteStudentForm = document.getElementById('deleteStudentForm');
     if (deleteStudentForm) {
-        deleteStudentForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const matricNo = document.getElementById('deleteMatricNo').value;
-            try {
-                const response = await fetch(`/students/${matricNo}`, {
-                    method: 'DELETE',
-                });
-                if (!response.ok) {
-                    throw new Error('Error deleting student');
-                }
-                alert('Student deleted successfully');
-                deleteStudentForm.reset();
-            } catch (error) {
-                console.error('Error deleting student:', error);
-                alert('Failed to delete student');
-            }
-        });
+      deleteStudentForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const matricNo = document.getElementById('deleteMatricNo').value;
+        try {
+          const response = await fetch(`http://localhost:4665/students/${matricNo}`, { // Update URL
+            method: 'DELETE',
+          });
+          if (!response.ok) {
+            throw new Error('Error deleting student');
+          }
+          alert('Student deleted successfully');
+          deleteStudentForm.reset();
+        } catch (error) {
+          console.error('Error deleting student:', error);
+          alert('Failed to delete student');
+        }
+      });
     }
 
-
-    // Close the modal when the close button is clicked
-    const closeButton = document.getElementsByClassName("close")[0];
-    if (closeButton) {
-        closeButton.onclick = function() {
-            const modal = document.getElementById('editStudentModal');
-            modal.style.display = "none";
-        };
-    }
-
-    // Handle edit form submission
+      // Close the modal when the close button is clicked
+      const closeButton = document.getElementsByClassName("close")[0];
+      if (closeButton) {
+          closeButton.onclick = function() {
+              const modal = document.getElementById('editStudentModal');
+              modal.style.display = "none";
+          };
+      }
+  //Handle edit form submission
     const editStudentForm = document.getElementById('editStudentForm');
     if (editStudentForm) {
-        editStudentForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const matricNo = document.getElementById('editMatricNo').value;
-            const firstName = document.getElementById('editFirstName').value;
-            const lastName = document.getElementById('editLastName').value;
-            const department = document.getElementById('editDepartment').value;
-            const email = document.getElementById('editEmail').value;
-            const medicalQuestions = document.getElementById('editMedicalQuestions').value;
-
-            try {
-                const response = await fetch(`/api/students/${matricNo}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ firstName, lastName, department, email, medicalQuestions })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Error updating student');
-                }
-                alert('Student updated successfully');
-                const modal = document.getElementById('editStudentModal');
-                modal.style.display = 'none';
-            } catch (error) {
-                console.error('Error updating student:', error);
-                alert('Failed to update student');
-            }
-        });
-    }
-
-    // Handle search form submission
-    const searchStudentForm = document.getElementById('searchStudentForm');
-    if (searchStudentForm) {
-        searchStudentForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const matricNo = document.getElementById('searchMatricNo').value;
-
-            try {
-                const response = await fetch(`http://localhost:4665/search?matricNo=${matricNo}`);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const student = await response.json();
-
-                document.getElementById('editMatricNo').value = student.matric_no;
-                document.getElementById('editFirstName').value = student.first_name;
-                document.getElementById('editLastName').value = student.last_name;
-                document.getElementById('editDepartment').value = student.department;
-                document.getElementById('editEmail').value = student.email;
-                document.getElementById('editMedicalQuestions').value = student.medical_questions;
-
-                // Show the edit modal
-                const modal = document.getElementById('editStudentModal');
-                modal.style.display = 'block';
-            } catch (error) {
-                console.error('Error fetching student:', error);
-                alert('Student not found');
-            }
-        });
-    }
-
-    // Handle registration form submission
-    document.getElementById('registrationForm').addEventListener('submit', async (event) => {
+      editStudentForm.addEventListener('submit', async (event) => {
         event.preventDefault();
-      
-        const formData = new FormData(event.target);
-        const data = Object.fromEntries(formData.entries());
-      
+  
+        const matricNo = document.getElementById('editMatricNo').value;
+        const firstName = document.getElementById('editFirstName').value;
+        const lastName = document.getElementById('editLastName').value;
+        const department = document.getElementById('editDepartment').value;
+        const email = document.getElementById('editEmail').value;
+        const medicalQuestions = document.getElementById('editMedicalQuestions').value;
+  
         try {
-          const response = await fetch('/register', {
-            method: 'POST',
+          const response = await fetch(`http://localhost:4665/api/students/${matricNo}`, { // Update URL
+            method: 'PUT',
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify({ firstName, lastName, department, email, medicalQuestions })
           });
-      
-          const result = await response.json();
-          if (response.ok) {
-            alert('Registration successful!');
-          } else {
-            alert(`Registration failed: ${result.error}`);
+  
+          if (!response.ok) {
+            throw new Error('Error updating student');
           }
+          alert('Student updated successfully');
+          const modal = document.getElementById('editStudentModal');
+          modal.style.display = 'none';
         } catch (error) {
-          console.error('Error during registration:', error);
-          alert('Registration failed. Please try again later.');
+          console.error('Error updating student:', error);
+          alert('Failed to update student');
         }
       });
-
-  // Handle registration form submission for register_student.html
-  const registerStudentFormAdmin = document.getElementById('registrationFormInneradmin');
-  if (registerStudentFormAdmin) {
-      registerStudentFormAdmin.addEventListener('submit', async (event) => {
-          event.preventDefault();
-
-          const firstName = document.getElementById('firstName').value;
-          const lastName = document.getElementById('lastName').value;
-          const matricNo = document.getElementById('matricNo').value;
-          const department = document.getElementById('department').value;
-          const email = document.getElementById('email').value;
-          const medicalQuestions = document.getElementById('medicalQuestions').value;
-
-          try {
-              const response = await fetch('http://localhost:4665/register', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({ firstName, lastName, matricNo, department, email, medicalQuestions })
-              });
-
-              if (!response.ok) {
-                  throw new Error('Error registering student');
-              }
-              alert('Student registered successfully');
-              registerStudentFormAdmin.reset();
-          } catch (error) {
-              console.error('Error registering student:', error);
-              alert('Failed to register student');
+    }
+  //Handle search form submission
+    const searchStudentForm = document.getElementById('searchStudentForm');
+    if (searchStudentForm) {
+      searchStudentForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const matricNo = document.getElementById('searchMatricNo').value;
+  
+        try {
+          const response = await fetch(`http://localhost:4665/search?matricNo=${matricNo}`); // Update URL
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
           }
+          const student = await response.json();
+  
+          document.getElementById('editMatricNo').value = student.matric_no;
+          document.getElementById('editFirstName').value = student.first_name;
+          document.getElementById('editLastName').value = student.last_name;
+          document.getElementById('editDepartment').value = student.department;
+          document.getElementById('editEmail').value = student.email;
+          document.getElementById('editMedicalQuestions').value = student.medical_questions;
+  
+          const modal = document.getElementById('editStudentModal');
+          modal.style.display = 'block';
+        } catch (error) {
+          console.error('Error fetching student:', error);
+          alert('Student not found');
+        }
       });
     }
+  
+     // Handle registration form submission for index.html
+     const registerStudentForm = document.getElementById('registrationFormInner');
+     if (registerStudentForm) {
+         registerStudentForm.addEventListener('submit', async (event) => {
+             event.preventDefault();
+ 
+             const firstName = document.getElementById('firstName').value;
+             const lastName = document.getElementById('lastName').value;
+             const matricNo = document.getElementById('matricNo').value;
+             const department = document.getElementById('department').value;
+             const email = document.getElementById('email').value;
+             const medicalQuestions = document.getElementById('medicalQuestions').value;
+ 
+             try {
+                 const response = await fetch('http://localhost:4665/register', {
+                     method: 'POST',
+                     headers: {
+                         'Content-Type': 'application/json'
+                     },
+                     body: JSON.stringify({ firstName, lastName, matricNo, department, email, medicalQuestions })
+                 });
+ 
+                 if (!response.ok) {
+                     throw new Error('Error registering student');
+                 }
+                 alert('Student registered successfully');
+                 registerStudentForm.reset();
+             } catch (error) {
+                 console.error('Error registering student:', error);
+                 alert('Failed to register student');
+             }
+         });
+     }
+ 
+     // Handle registration form submission for register_student.html
+     const registerStudentFormAdmin = document.getElementById('registrationFormInneradmin');
+     if (registerStudentFormAdmin) {
+         registerStudentFormAdmin.addEventListener('submit', async (event) => {
+             event.preventDefault();
+ 
+             const firstName = document.getElementById('firstName').value;
+             const lastName = document.getElementById('lastName').value;
+             const matricNo = document.getElementById('matricNo').value;
+             const department = document.getElementById('department').value;
+             const email = document.getElementById('email').value;
+             const medicalQuestions = document.getElementById('medicalQuestions').value;
+ 
+             try {
+                 const response = await fetch('http://localhost:4665/register', {
+                     method: 'POST',
+                     headers: {
+                         'Content-Type': 'application/json'
+                     },
+                     body: JSON.stringify({ firstName, lastName, matricNo, department, email, medicalQuestions })
+                 });
+ 
+                 if (!response.ok) {
+                     throw new Error('Error registering student');
+                 }
+                 alert('Student registered successfully');
+                 registerStudentFormAdmin.reset();
+             } catch (error) {
+                 console.error('Error registering student:', error);
+                 alert('Failed to register student');
+             }
+         });
+     }
+    });

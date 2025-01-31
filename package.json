@@ -12,10 +12,10 @@
   "description": "",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "connect-pg-simple": "^7.0.0",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "express-session": "^1.18.1",
-    "connect-pg-simple": "^7.0.0",
     "lsof": "^0.1.0",
     "pg": "^8.13.1"
   }

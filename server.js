@@ -8,13 +8,20 @@ const cors = require('cors');
 const pgSession = require('connect-pg-simple')(session);
 
 const app = express();
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT || 4665;
+
+if (!process.env.DATABASE_URL) {
+  console.error('DATABASE_URL environment variable is not set');
+  process.exit(1);
+}
 
 console.log('DATABASE_URL:', process.env.DATABASE_URL); // Log the DATABASE_URL
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  ssl: {
+    rejectUnauthorized: false
+  },
   connectionTimeoutMillis: 20000, // Increase connection timeout to 20 seconds
   idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
   max: 20 // Set maximum number of clients in the pool
@@ -41,9 +48,16 @@ connectWithRetry().catch(err => {
 });
 
 // Use CORS middleware
-app.use(cors()); // Enable CORS for all requests
+app.use(cors({
+  origin: 'http://127.0.0.1:5500', // Allow requests from your frontend
+  credentials: true, // Enable credentials in requests
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type']
+})); // Enable CORS for all requests
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json()); // Parse JSON requests for PUT requests
+// Handle OPTIONS requests
+app.options('*', cors());
 
 // Use session middleware with PostgreSQL store
 app.use(session({
@@ -103,6 +117,26 @@ const createSessionTable = async () => {
   }
 };
 
+// Create students table if it doesn't exist
+const createStudentsTable = async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS students (
+        id SERIAL PRIMARY KEY,
+        first_name VARCHAR(255) NOT NULL,
+        last_name VARCHAR(255) NOT NULL,
+        matric_no VARCHAR(255) UNIQUE NOT NULL,
+        department VARCHAR(255) NOT NULL,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        medical_questions TEXT NOT NULL
+      );
+    `);
+    console.log('Students table created successfully');
+  } catch (error) {
+    console.error('Error creating students table:', error);
+  }
+};
+
 // Hash passwords 
 const saltRounds = 11; // Adjust as needed
 
@@ -129,6 +163,7 @@ const initializeDatabase = async () => {
   await createAdminTable();
   await createSessionTable();
   await createAdmin();
+  await createStudentsTable();
 };
 
 initializeDatabase();
@@ -137,6 +172,7 @@ initializeDatabase();
 app.post('/register', async (req, res) => {
   try {
     const { firstName, lastName, matricNo, department, email, medicalQuestions } = req.body;
+    console.log('Received registration data:', req.body); // Log the received data
 
     const result = await pool.query(
       'INSERT INTO students (first_name, last_name, matric_no, department, email, medical_questions) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
@@ -148,9 +184,9 @@ app.post('/register', async (req, res) => {
     console.error('Error registering student:', error);
 
     if (error.code === '23505') { // Handle unique constraint violation (e.g., duplicate matricNo or email)
-      res.status(400).json({ error: 'Matriculation number or email already exists.' });
+      return res.status(400).json({ error: 'Matriculation number or email already exists.' });
     } else {
-      res.status(500).json({ error: 'Registration failed. Please try again later.' });
+     return res.status(500).json({ error: 'Registration failed. Please try again later.' });
     }
   }
 });
@@ -169,17 +205,15 @@ app.get('/students', async (req, res) => {
 // Delete student route
 app.delete('/students/:matricNo', async (req, res) => {
   try {
-    const { matricNo } = req.params;
-    console.log(`Attempting to delete student with matricNo: ${matricNo}`);
-    const result = await pool.query('DELETE FROM students WHERE matric_no = $1 RETURNING *', [matricNo]);
-    if (result.rowCount === 0) {
-      console.log(`Student with matricNo: ${matricNo} not found`);
-      return res.status(404).json({ error: 'Student not found' });
-    }
-    res.status(200).json({ message: 'Student deleted successfully', student: result.rows[0] });
+      const { matricNo } = req.params;
+      const result = await pool.query('DELETE FROM students WHERE matric_no = $1 RETURNING *', [matricNo]);
+      if (result.rowCount === 0) {
+          return res.status(404).json({ error: 'Student not found' });
+      }
+      res.status(200).json({ message: 'Student deleted successfully', student: result.rows[0] });
   } catch (error) {
-    console.error('Error deleting student:', error);
-    res.status(500).json({ error: 'Failed to delete student' });
+      console.error('Error deleting student:', error);
+      res.status(500).json({ error: 'Failed to delete student' });
   }
 });
 
@@ -201,13 +235,13 @@ app.post('/admin/login', async (req, res) => {
     if (isMatch) {
       req.session.admin = true; 
       req.session.adminId = result.rows[0].id; 
-      res.redirect('/admin_dashboard.html');
+      return res.status(200).json({ message: 'Login successful' });
     } else {
-      res.status(401).json({ error: 'Invalid username or password' });
+      return res.status(500).json({ error: 'Invalid username or password' });
     }
   } catch (error) {
     console.error('Error during login:', error);
-    res.status(500).json({ error: 'Login failed. Please try again later.' });
+    return res.status(500).json({ error: 'Login failed. Please try again later.' });
   }
 });
 
@@ -218,7 +252,7 @@ app.get('/admin/logout', (req, res) => {
 });
 
 // Admin dashboard route (protected)
-app.get('/admin/dashboard', (req, res) => {
+app.get('/admin_dashboard.html', (req, res) => {
   if (!req.session.admin) {
     return res.redirect('/admin'); // Redirect to login if not logged in
   }
@@ -315,3 +349,5 @@ app.get('/search', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch student' });
   }
 });
+
+//$env:DATABASE_URL="postgresql://students_vi4d_user:NoiyX3pH4FXGMyY6EMetCAmfL3s3TLKz@dpg-cue9uo5svqrc73d7eaag-a.oregon-postgres.render.com/students_vi4d"

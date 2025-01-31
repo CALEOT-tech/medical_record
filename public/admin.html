@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login</title>
-    <link rel="stylesheet" href="admin.css ">
+    <link rel="stylesheet" href="admin.css">
 </head>
 <body>
     <div class="container">
         <h2>Admin Login</h2>
-        <form id="loginForm" action="/admin/login" method="POST"> 
+        <form id="loginForm" action="http://localhost:4665/admin/login" method="POST"> 
             <div class="form-groupadmin">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
@@ -27,6 +29,5 @@
         </footer>
     </div>
     <script src="script.js"></script>
-   
 </body>
 </html>
