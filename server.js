@@ -15,15 +15,37 @@ console.log('DATABASE_URL:', process.env.DATABASE_URL);
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  connectionTimeoutMillis: 20000, // Increase connection timeout to 10 seconds
+  idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
+  max: 20 // Set maximum number of clients in the pool
+});
+
+// Retry logic for database connection
+const connectWithRetry = async (retries = 5, delay = 5000) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      await pool.connect();
+      console.log('Connected to the database');
+      return;
+    } catch (err) {
+      console.error(`Database connection failed. Retrying in ${delay / 1000} seconds...`, err);
+      await new Promise(res => setTimeout(res, delay));
+    }
+  }
+  throw new Error('Failed to connect to the database after multiple attempts');
+};
+
+connectWithRetry().catch(err => {
+  console.error('Could not establish a database connection:', err);
+  process.exit(1);
 });
 
 // Use CORS middleware
 //app.use(cors()); // Enable CORS for all requests
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json()); // Parse JSON requests for PUT requests
-app.use(cors({
-}));
+app.use(cors({ origin: 'http://localhost:4665', credentials: true })); // Enable CORS for a Single Route
 
 // Use session middleware with PostgreSQL store
 app.use(session({
