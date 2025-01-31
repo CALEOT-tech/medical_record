@@ -15,12 +15,15 @@ const PORT = process.env.PORT || 4665;
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
+
 // Use CORS middleware
-app.use(cors()); // Enable CORS for all requests
+//app.use(cors()); // Enable CORS for all requests
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json()); // Parse JSON requests for PUT requests
+app.use(cors({
+}));
 
 // Use session middleware with PostgreSQL store
 app.use(session({
@@ -28,7 +31,7 @@ app.use(session({
     pool: pool, // Connection pool
     tableName: 'session' // Use another table-name than the default "session" one
   }),
-  secret: '12345678', // Replace with your secret key
+  secret: '123456789', // Replace with your secret key
   resave: false,
   saveUninitialized: false,
   cookie: { secure: false } // Set to true if using HTTPS
@@ -41,9 +44,12 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+
+
+
 
 // Create admins table if it doesn't exist
 const createAdminTable = async () => {
@@ -72,10 +78,7 @@ const createAdmin = async () => {
   try {
     const result = await pool.query('SELECT * FROM admins WHERE username = $1', [username]);
     if (result.rows.length === 0) {
-      await pool.query(
-        'INSERT INTO admins (username, password_hash) VALUES ($1, $2)',
-        [username, hashedPassword]
-      );
+      await pool.query('INSERT INTO admins (username, password_hash) VALUES ($1, $2)', [username, hashedPassword]);
       console.log('Admin user created successfully');
     } else {
       console.log('Admin user already exists');
@@ -92,21 +95,6 @@ const initializeDatabase = async () => {
 };
 
 initializeDatabase();
-
-// Session middleware
-app.use(session({
-    secret: '123456789', // Replace with a strong secret key
-    resave: false,    
-    saveUninitialized: true
-}));
-
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.json()); // Parse JSON requests for PUT requests
-app.use(cors({
-  origin: 'http://127.0.0.1:5500',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
-}));
 
 // Register route
 app.post('/register', async (req, res) => {
@@ -155,19 +143,6 @@ app.delete('/students/:matricNo', async (req, res) => {
   } catch (error) {
       console.error('Error deleting student:', error);
       res.status(500).json({ error: 'Failed to delete student' });
-  }
-});
-
-const server = app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
-});
-
-server.on('error', (err) => {
-  if (err.code === 'EADDRINUSE') {
-    console.error(`Port ${port} is already in use`);
-    process.exit(1);
-  } else {
-    throw err;
   }
 });
 
