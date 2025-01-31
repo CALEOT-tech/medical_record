@@ -11,7 +11,7 @@ const app = express();
 //const port = 4665;
 const PORT = process.env.PORT || 4665;
 
-
+console.log('DATABASE_URL:', process.env.DATABASE_URL);
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
