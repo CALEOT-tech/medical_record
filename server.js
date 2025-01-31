@@ -47,12 +47,17 @@ connectWithRetry().catch(err => {
   process.exit(1);
 });
 
-// Use CORS middleware
+// Configure CORS to allow requests from your Render domain
+const allowedOrigins = ['http://127.0.0.1:5500', 'https://medical-record-pq83.onrender.com'];
 app.use(cors({
-  origin: 'http://127.0.0.1:5500', // Allow requests from your frontend
-  credentials: true, // Enable credentials in requests
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type']
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
 })); // Enable CORS for all requests
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json()); // Parse JSON requests for PUT requests
