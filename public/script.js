@@ -17,6 +17,32 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    document.getElementById('loginForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+      
+        const formData = new FormData(event.target);
+        const data = Object.fromEntries(formData.entries());
+      
+        try {
+          const response = await fetch('/admin/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          });
+      
+          if (response.ok) {
+            window.location.href = '/admin_dashboard.html';
+          } else {
+            const result = await response.json();
+            alert(`Login failed: ${result.error}`);
+          }
+        } catch (error) {
+          console.error('Error during login:', error);
+          alert('Login failed. Please try again later.');
+        }
+      });
         
     // Handle viewing all students
     const viewAllStudentsButton = document.getElementById('viewAllStudentsButton');
@@ -25,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (viewAllStudentsButton) {
         viewAllStudentsButton.addEventListener('click', async () => {
             try {
-                const response = await fetch('http://localhost:4665/students');
+                const response = await fetch('/students');
                 if (!response.ok) {
                     throw new Error('Error fetching students');
                 }
@@ -76,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
             event.preventDefault();
             const matricNo = document.getElementById('deleteMatricNo').value;
             try {
-                const response = await fetch(`http://localhost:4665/students/${matricNo}`, {
+                const response = await fetch(`/students/${matricNo}`, {
                     method: 'DELETE',
                 });
                 if (!response.ok) {
