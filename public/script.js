@@ -226,4 +226,4 @@ document.addEventListener('DOMContentLoaded', function() {
               alert('Failed to register student');
           }
       });
-  }
+  
