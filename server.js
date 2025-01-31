@@ -9,7 +9,7 @@ const pgSession = require('connect-pg-simple')(session);
 
 const app = express();
 //const port = 4665;
-const PORT = process.env.PORT || 4665;
+const PORT = process.env.PORT || 10000;
 
 console.log('DATABASE_URL:', process.env.DATABASE_URL);
 
@@ -45,7 +45,7 @@ connectWithRetry().catch(err => {
 //app.use(cors()); // Enable CORS for all requests
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json()); // Parse JSON requests for PUT requests
-app.use(cors({ origin: 'http://localhost:4665', credentials: true })); // Enable CORS for a Single Route
+app.use(cors({ origin: 'http://localhost:10000', credentials: true })); // Enable CORS for a Single Route
 
 // Use session middleware with PostgreSQL store
 app.use(session({
