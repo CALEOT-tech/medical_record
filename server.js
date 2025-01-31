@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs'); // For password hashing
 const session = require('express-session');
 const path = require('path');
 const cors = require('cors');
+const pgSession = require('connect-pg-simple')(session);
 
 const app = express();
 //const port = 4665;
@@ -20,6 +21,18 @@ const pool = new Pool({
 });
 // Use CORS middleware
 app.use(cors()); // Enable CORS for all requests
+
+// Use session middleware with PostgreSQL store
+app.use(session({
+  store: new pgSession({
+    pool: pool, // Connection pool
+    tableName: 'session' // Use another table-name than the default "session" one
+  }),
+  secret: '12345678', // Replace with your secret key
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false } // Set to true if using HTTPS
+}));
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
