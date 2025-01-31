@@ -167,39 +167,32 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Handle registration form submission
-    const registerStudentForm = document.getElementById('registrationFormInner');
-    if (registerStudentForm) {
-        registerStudentForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
-            const matricNo = document.getElementById('matricNo').value;
-            const department = document.getElementById('department').value;
-            const email = document.getElementById('email').value;
-            const medicalQuestions = document.getElementById('medicalQuestions').value;
-
-            try {
-                const response = await fetch('http://localhost:4665/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ firstName, lastName, matricNo, department, email, medicalQuestions })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Error registering student');
-                }
-                alert('Student registered successfully');
-                registerStudentForm.reset();
-            } catch (error) {
-                console.error('Error registering student:', error);
-                alert('Failed to register student');
-            }
-        });
-    }
-});
+    document.getElementById('registrationForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+      
+        const formData = new FormData(event.target);
+        const data = Object.fromEntries(formData.entries());
+      
+        try {
+          const response = await fetch('/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          });
+      
+          const result = await response.json();
+          if (response.ok) {
+            alert('Registration successful!');
+          } else {
+            alert(`Registration failed: ${result.error}`);
+          }
+        } catch (error) {
+          console.error('Error during registration:', error);
+          alert('Registration failed. Please try again later.');
+        }
+      });
 
   // Handle registration form submission for register_student.html
   const registerStudentFormAdmin = document.getElementById('registrationFormInneradmin');
