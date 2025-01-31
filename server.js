@@ -88,9 +88,30 @@ const createAdmin = async () => {
   }
 };
 
+// Create session table if it doesn't exist
+const createSessionTable = async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS session (
+        sid VARCHAR NOT NULL COLLATE "default",
+        sess JSON NOT NULL,
+        expire TIMESTAMP(6) NOT NULL
+      )
+      WITH (OIDS=FALSE);
+      
+      ALTER TABLE session ADD CONSTRAINT session_pkey PRIMARY KEY (sid) NOT DEFERRABLE INITIALLY IMMEDIATE;
+      CREATE INDEX IDX_session_expire ON session(expire);
+    `);
+    console.log('Session table created successfully');
+  } catch (error) {
+    console.error('Error creating session table:', error);
+  }
+};
+
 // Create the admins table and then create an admin user
 const initializeDatabase = async () => {
   await createAdminTable();
+  await createSessionTable();
   await createAdmin();
 };
 
