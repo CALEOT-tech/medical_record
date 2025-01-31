@@ -7,7 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
             registrationForm.style.display = 'block';
             registerButton.style.display = 'none';
         });
-    }
+        }
+    });
 
     const registerButtonadmin = document.getElementById('registerButtonadmin');
     if (registerButtonadmin) {
@@ -226,4 +227,4 @@ document.addEventListener('DOMContentLoaded', function() {
               alert('Failed to register student');
           }
       });
-  
+    }
