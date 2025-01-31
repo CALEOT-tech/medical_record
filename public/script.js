@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
              const medicalQuestions = document.getElementById('medicalQuestions').value;
  
              try {
-                 const response = await fetch('http://localhost:4665/register', {
+                 const response = await fetch('https://medical-record-pq83.onrender.com/register', {
                      method: 'POST',
                      headers: {
                          'Content-Type': 'application/json'
