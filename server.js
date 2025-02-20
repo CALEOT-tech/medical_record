@@ -133,7 +133,7 @@ const createStudentsTable = async () => {
         matric_no VARCHAR(255) UNIQUE NOT NULL,
         department VARCHAR(255) NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
-        Treatment Log TEXT NOT NULL
+        medical_questions TEXT NOT NULL
       );
     `);
     console.log('Students table created successfully');
