@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="admin_dashboard.css">
+</head>
+<body class="body1">
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+
+        <h2>Search Student</h2>
+        <form id="searchStudentForm">
+            <div class="form-group">
+                <label for="searchMatricNo">Matriculation Number:</label>
+                <input type="text" id="searchMatricNo" name="matricNo" required>
+            </div>
+            <button type="submit">Search</button>
+        </form>
+
+        <div class="table-container">
+            <div>
+                <h2>Register Student</h2>
+                <button id="registerButtonadmin">Register Student</button>
+            </div>
+            <div>
+                <h2>View All Students</h2>
+                <button id="viewAllStudentsButton">View All Students</button>
+            </div>
+        </div>
+
+        <table id="studentTable">
+            <thead>
+                <tr>
+                    <th>Matriculation Number</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Department</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+        <div id="editStudentModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Edit Student</h2>
+                <form id="editStudentForm">
+                    <div class="form-group">
+                        <label for="editMatricNo">Matriculation Number:</label>
+                        <input type="text" id="editMatricNo" name="matricNo" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="editFirstName">First Name:</label>
+                        <input type="text" id="editFirstName" name="firstName">
+                    </div>
+                    <div class="form-group">
+                        <label for="editLastName">Last Name:</label>
+                        <input type="text" id="editLastName" name="lastName">
+                    </div>
+                    <div class="form-group">
+                        <label for="editDepartment">Department:</label>
+                        <input type="text" id="editDepartment" name="department">
+                    </div>
+                    <div class="form-group">
+                        <label for="editEmail">Email:</label>
+                        <input type="email" id="editEmail" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="editMedicalQuestions">Medical Questions:</label>
+                        <textarea id="editMedicalQuestions" name="medicalQuestions" rows="4"></textarea>
+                    </div>
+                    <button type="submit">Save Changes</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="viewAllStudentsModal" class="modalview">
+            <div class="modal-contentview">
+                <span class="closeview" id="closeViewAllStudents">&times;</span>
+                <h2>All Students</h2>
+                <table id="allStudentsTable">
+                    <thead>
+                        <tr>
+                            <th>Actions</th>
+                            <th>Matriculation Number</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Department</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h2>Delete Student</h2>
+        <form id="deleteStudentForm">
+            <div class="form-group">
+                <label for="deleteMatricNo">Matriculation Number:</label>
+                <input type="text" id="deleteMatricNo" name="matricNo" required>
+            </div>
+            <button type="submit">Delete</button>
+        </form>  
+        <footer>
+            <p>&copy; 2025 School Medical Registration</p>
+        </footer>      
+    </div>
+    <script src="script.js"></script>
+   
+</body>
+</html>

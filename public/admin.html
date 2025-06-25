@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Admin Login</h2>
+        <form id="loginForm" action="https://medical-record-pq83.onrender.com/admin/login" method="POST"> 
+            <div class="form-groupadmin">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-groupadmin">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+
+        <form id="changePasswordForm" action="change-password.html" method="GET">
+            <button type="submit">Change Password</button>
+        </form>
+        <footer>
+            <p>&copy; 2025 School Medical Registration</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

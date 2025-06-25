@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register Student</title>
+    <link rel="stylesheet" href="register_student.css">
+</head>
+<body>
+    <div class="container" id="registrationFormadmin">
+        <h1>Register Student</h1>
+        <form id="registrationFormInneradmin" action="https://medical-record-pq83.onrender.com/register" method="POST"> 
+            <div class="form-group">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" required>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" required>
+            </div>
+            <div class="form-group">
+                <label for="matricNo">Matriculation Number:</label>
+                <input type="text" id="matricNo" name="matricNo" required>
+            </div>
+            <div class="form-group">
+                <label for="department">Department:</label>
+                <input type="text" id="department" name="department" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <!-- Added Fields Below Treatment Log -->
+         <div class="form-group">
+            <label for="medications">Current Medications:</label>
+            <textarea id="medications" name="medications" rows="2" placeholder="List any medications you are currently taking"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="previousTreatments">Previous Treatments:</label>
+            <textarea id="previousTreatments" name="previousTreatments" rows="2" placeholder="Describe any previous treatments or surgeries"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="healthConditions">Health Conditions:</label>
+            <textarea id="healthConditions" name="healthConditions" rows="2" placeholder="List any chronic health conditions"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="medicalQuestions">medical_questions:</label>
+            <textarea id="medicalQuestions" name="medicalQuestions" rows="4" required></textarea> 
+        </div>
+            <button type="submit">Register</button>
+        </form>
+        <footer class="footer">
+            <p>&copy; 2025 School Medical Registration</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+  
+</body>
+</html>
