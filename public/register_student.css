@@ -1,20 +1,24 @@
 /* General styles for the register student page */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    /* Add background image */
+    background-image: url('image/clinic.webp'); /* Place your image in the public folder and update the filename */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 190vh;
 }
 
 .container {
     width: 80%;
     max-width: 600px;
     padding: 20px;
-    background-color: #fff;
+    background-color: rgba(21, 16, 16, 0.4);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     text-align: center;
