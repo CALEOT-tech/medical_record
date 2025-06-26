@@ -217,9 +217,9 @@ document.addEventListener('DOMContentLoaded', () => {
              const matricNo = document.getElementById('matricNo').value;
              const department = document.getElementById('department').value;
              const email = document.getElementById('email').value;
-             const medications = document.getElementById('editmedications').value;
-             const previousTreatments = document.getElementById('editpreviousTreatments').value;
-             const healthConditions = document.getElementById('edithealthConditions').value;
+             const medications = document.getElementById('medications').value;
+             const previousTreatments = document.getElementById('previousTreatments').value;
+             const healthConditions = document.getElementById('healthConditions').value;
              const medicalQuestions = document.getElementById('medicalQuestions').value;
  
              try {
