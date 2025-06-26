@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = Object.fromEntries(formData.entries());
   
         try {
-          const response = await fetch('https://medical-record-pq83.onrender.com/admin/login', { // Update URL
+          const response = await fetch('https://medical-record-oe6a.onrender.com/admin/login', { // Update URL
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
           
   
           const result = await response.json();
-          window.location.href = 'https://medical-record-pq83.onrender.com/admin_dashboard.html';
+          window.location.href = 'https://medical-record-oe6a.onrender.com/admin_dashboard.html';
         } catch (error) {
           console.error('Error during login:', error);
           alert(error.message);
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (viewAllStudentsButton) {
         viewAllStudentsButton.addEventListener('click', async () => {
             try {
-                const response = await fetch('https://medical-record-pq83.onrender.com/students');
+                const response = await fetch('https://medical-record-oe6a.onrender.com/students');
                 if (!response.ok) {
                     throw new Error('Error fetching students');
                 }
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
         const matricNo = document.getElementById('deleteMatricNo').value;
         try {
-          const response = await fetch(`https://medical-record-pq83.onrender.com/students/${matricNo}`, { // Update URL
+          const response = await fetch(`https://medical-record-oe6a.onrender.com/students/${matricNo}`, { // Update URL
             method: 'DELETE',
           });
           if (!response.ok) {
@@ -153,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   
         try {
-          const response = await fetch(`https://medical-record-pq83.onrender.com/api/students/${matricNo}`, { // Update URL
+          const response = await fetch(`https://medical-record-oe6a.onrender.com/api/students/${matricNo}`, { // Update URL
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json'
@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const matricNo = document.getElementById('searchMatricNo').value;
   
         try {
-          const response = await fetch(`https://medical-record-pq83.onrender.com/search?matricNo=${matricNo}`); // Update URL
+          const response = await fetch(`https://medical-record-oe6a.onrender.com/search?matricNo=${matricNo}`); // Update URL
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
              const medicalQuestions = document.getElementById('medicalQuestions').value;
  
              try {
-                 const response = await fetch('https://medical-record-pq83.onrender.com/register', {
+                 const response = await fetch('https://medical-record-oe6a.onrender.com/register', {
                      method: 'POST',
                      headers: {
                          'Content-Type': 'application/json'
@@ -260,7 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
              const medicalQuestions = document.getElementById('medicalQuestions').value;
  
              try {
-                 const response = await fetch('https://medical-record-pq83.onrender.com/register', {
+                 const response = await fetch('https://medical-record-oe6a.onrender.com/register', {
                      method: 'POST',
                      headers: {
                          'Content-Type': 'application/json'

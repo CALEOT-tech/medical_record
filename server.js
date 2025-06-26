@@ -49,7 +49,7 @@ connectWithRetry().catch(err => {
 });
 
 // Configure CORS to allow requests from Render domain
-const allowedOrigins = ['http://127.0.0.1:3000', 'https://medical-record-pq83.onrender.com'];
+const allowedOrigins = ['http://127.0.0.1:3000', 'https://medical-record-oe6a.onrender.com'];
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
