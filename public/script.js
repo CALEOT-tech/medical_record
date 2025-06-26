@@ -192,9 +192,9 @@ document.addEventListener('DOMContentLoaded', () => {
           document.getElementById('editLastName').value = student.last_name;
           document.getElementById('editDepartment').value = student.department;
           document.getElementById('editEmail').value = student.email;
-          document.getElementById('editmedications').value;
-          document.getElementById('editpreviousTreatments').value;
-          document.getElementById('edithealthConditions').value;
+          document.getElementById('editmedications').value = student.medications;
+          document.getElementById('editpreviousTreatments').value = student.previousTreatments;
+          document.getElementById('edithealthConditions').value = student.healthConditions;
           document.getElementById('editMedicalQuestions').value = student.medical_questions;
   
           const modal = document.getElementById('editStudentModal');
@@ -254,9 +254,9 @@ document.addEventListener('DOMContentLoaded', () => {
              const matricNo = document.getElementById('matricNo').value;
              const department = document.getElementById('department').value;
              const email = document.getElementById('email').value;
-             const medications = document.getElementById('editmedications').value;
-             const previousTreatments = document.getElementById('editpreviousTreatments').value;
-             const healthConditions = document.getElementById('edithealthConditions').value;
+             const medications = document.getElementById('medications').value;
+             const previousTreatments = document.getElementById('previousTreatments').value;
+             const healthConditions = document.getElementById('healthConditions').value;
              const medicalQuestions = document.getElementById('medicalQuestions').value;
  
              try {

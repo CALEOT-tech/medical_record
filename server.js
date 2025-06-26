@@ -137,7 +137,7 @@ const createStudentsTable = async () => {
     medications TEXT NOT NULL,
     previous_treatments TEXT NOT NULL,
     health_conditions TEXT NOT NULL,
-    treatment_log TEXT
+    medical_questions TEXT
       );
     `);
     console.log('Students table created successfully');
@@ -331,8 +331,8 @@ app.put('/api/students/:matricNo', async (req, res) => {
     const { firstName, lastName, department, email, medicalQuestions } = req.body;
 
     const result = await pool.query(
-      'UPDATE students SET first_name = $1, last_name = $2, department = $3, email = $4, medical_questions = $5 WHERE matric_no = $6',
-      [firstName, lastName, department, email, medicalQuestions, matricNo]
+      'UPDATE students SET first_name = $1, last_name = $2, department = $3, email = $4, medications = $5, previous_treatments = $6, health_conditions = $7, medical_questions = $8 WHERE matric_no = $9',
+      [firstName, lastName, department, email, medications, previousTreatments, healthConditions, medicalQuestions, matricNo]
     );
 
     res.json({ message: 'Student updated successfully' });
