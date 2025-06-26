@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (viewAllStudentsButton) {
         viewAllStudentsButton.addEventListener('click', async () => {
             try {
-                const response = await fetch('https://medical-record-oe6a.onrender.com/students');
+                const response = await fetch('https://medical-record-oe6a.onrender.com/api/students');
                 if (!response.ok) {
                     throw new Error('Error fetching students');
                 }
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
         const matricNo = document.getElementById('deleteMatricNo').value;
         try {
-          const response = await fetch(`https://medical-record-oe6a.onrender.com/students/${matricNo}`, { // Update URL
+          const response = await fetch(`https://medical-record-oe6a.onrender.com/api/students/${matricNo}`, { // Update URL
             method: 'DELETE',
           });
           if (!response.ok) {
