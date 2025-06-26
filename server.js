@@ -356,3 +356,13 @@ app.get('/search', async (req, res) => {
   }
 });
 
+// Add this near the top, after pool is defined
+(async () => {
+  try {
+    await pool.query('ALTER TABLE students ADD COLUMN IF NOT EXISTS medical_questions TEXT;');
+    console.log('medical_questions column added (if it did not exist)');
+  } catch (err) {
+    console.error('Migration error:', err);
+  }
+})();
+
