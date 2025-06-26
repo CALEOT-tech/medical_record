@@ -187,7 +187,7 @@ app.post('/register', async (req, res) => {
 
   try {
     const result = await pool.query(
-      'INSERT INTO students (first_name, last_name, matric_no, department, email, medications, previousTreatments, healthConditions, medical_questions) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      'INSERT INTO students (first_name, last_name, matric_no, department, email, medications, previous_treatments, health_conditions, medical_questions) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
       [firstName, lastName, matricNo, department, email, medications, previousTreatments, healthConditions, medicalQuestions]
     );
     res.status(201).json(result.rows[0]);
@@ -198,7 +198,7 @@ app.post('/register', async (req, res) => {
 });
 
 // Get all students route
-app.get('/students', async (req, res) => {
+app.get('/api/students', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM students');
     res.status(200).json(result.rows);
@@ -209,7 +209,7 @@ app.get('/students', async (req, res) => {
 });
 
 // Delete student route
-app.delete('/students/:matricNo', async (req, res) => {
+app.delete('/api/students/:matricNo', async (req, res) => {
   try {
       const { matricNo } = req.params;
       const result = await pool.query('DELETE FROM students WHERE matric_no = $1 RETURNING *', [matricNo]);
