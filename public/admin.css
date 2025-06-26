@@ -11,7 +11,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 190vh;
+    height: 100vh;
 }
 
 .container {
@@ -80,4 +80,24 @@ footer {
 
 #changePasswordForm button:hover {
     background-color: #a72323;
+}
+
+@media (max-width: 600px) {
+    body {
+        height: 100vh;
+        margin: 0;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+    }
+    .container {
+        width: 100%;
+        max-width: 400px;
+        padding: 20px 10px;
+        box-sizing: border-box;
+        margin: auto;
+    }
 }
